@@ -32,3 +32,23 @@ func NewArtist(name string, age int) (Artist, error) {
 		collabs: make([]*valueobject.Collab, 0),
 	}, nil
 }
+
+func (a *Artist) ID() uuid.UUID {
+	return a.person.ID
+}
+
+func (a *Artist) Name() string {
+	return a.person.Name
+}
+
+func (a *Artist) Age() int {
+	return a.person.Age
+}
+
+func (a *Artist) Albums() []*entity.Album {
+	return a.albums
+}
+
+func (a *Artist) Collabs() []*valueobject.Collab {
+	return a.collabs
+}
