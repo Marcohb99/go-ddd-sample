@@ -65,19 +65,25 @@ func WithInMemoryVenueRepository(venues []aggregate.Venue) GigConfiguration {
 	}
 }
 
-func (gs *GigService) BookGig(artistId uuid.UUID, venueIds []uuid.UUID) error {
+func (gs *GigService) BookGigs(artistId uuid.UUID, venueIds []uuid.UUID) (float64, error) {
 	bookingArtist, err := gs.artistRepository.Get(artistId)
 	if err != nil {
-		return err
+		return 0.0, err
 	}
+
 	var venues []aggregate.Venue
+	var total float64
+
 	for _, venueId := range venueIds {
 		bookingVenue, err := gs.venueRepository.Get(venueId)
 		if err != nil {
-			return err
+			return 0.0, err
 		}
 		venues = append(venues, bookingVenue)
+		venueIds = append(venueIds, bookingVenue.ID())
+		total += bookingVenue.Price()
 	}
-	log.Printf("Booking gig for artist %s at venues %v", bookingArtist.Name(), venues)
-	return nil
+
+	log.Printf("Booking gig for artist %s at venues %v", bookingArtist.Name(), venueIds)
+	return total, nil
 }

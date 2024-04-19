@@ -13,9 +13,10 @@ type Venue struct {
 	id       uuid.UUID
 	name     string
 	location string
+	price    float64
 }
 
-func NewVenue(name, location string) (Venue, error) {
+func NewVenue(name, location string, price float64) (Venue, error) {
 	if name == "" {
 		return Venue{}, ErrInvalidVenueName
 	}
@@ -23,9 +24,14 @@ func NewVenue(name, location string) (Venue, error) {
 		id:       uuid.New(),
 		name:     name,
 		location: location,
+		price:    price,
 	}, nil
 }
 
 func (v Venue) ID() uuid.UUID {
 	return v.id
+}
+
+func (v Venue) Price() float64 {
+	return v.price
 }

@@ -11,7 +11,7 @@ import (
 )
 
 func Test_Repository_Get_Venue(t *testing.T) {
-	venue, err := aggregate.NewVenue("El Ventorrillo del Cura", "Rincon de la Victoria")
+	venue, err := aggregate.NewVenue("El Ventorrillo del Cura", "Rincon de la Victoria", 1.1)
 	require.NoError(t, err)
 
 	sut := VenueRepository{
@@ -54,7 +54,7 @@ func Test_Repository_Get_Venue(t *testing.T) {
 }
 
 func Test_Repository_Add_Venue(t *testing.T) {
-	venue, err := aggregate.NewVenue("El Ventorrillo del Cura", "Rincon de la Victoria")
+	venue, err := aggregate.NewVenue("El Ventorrillo del Cura", "Rincon de la Victoria", 1.1)
 	require.NoError(t, err)
 
 	sut := VenueRepository{
@@ -70,7 +70,7 @@ func Test_Repository_Add_Venue(t *testing.T) {
 		expectedCount int
 	}
 
-	v, err := aggregate.NewVenue("Sala Velvet", "Málaga")
+	v, err := aggregate.NewVenue("Sala Velvet", "Málaga", 1.1)
 	require.NoError(t, err)
 
 	// Note, if we switch the order, the first one will add the venue

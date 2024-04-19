@@ -29,7 +29,7 @@ func Test_NewVenue(t *testing.T) {
 
 	for _, tc := range tests {
 		t.Run(tc.test, func(t *testing.T) {
-			_, err := NewVenue(tc.name, tc.location)
+			_, err := NewVenue(tc.name, tc.location, 1.1)
 			if !errors.Is(err, tc.expectedError) {
 				t.Errorf("Expected error %v, got %v", tc.expectedError, err)
 			}
