@@ -2,8 +2,6 @@ package services
 
 import (
 	"github.com/Marcohb99/go-ddd-sample/src/aggregate"
-	artistMemory "github.com/Marcohb99/go-ddd-sample/src/domain/artist/inmemory"
-	venueMemory "github.com/Marcohb99/go-ddd-sample/src/domain/venue/inmemory"
 	"github.com/google/uuid"
 	"github.com/stretchr/testify/require"
 	"testing"
@@ -25,18 +23,12 @@ func TestRecordLabel_BookGigs(t *testing.T) {
 	venues := initVenuesRecordLabel(t)
 	venueIds := []uuid.UUID{venues[0].ID(), venues[1].ID()}
 
-	vr := venueMemory.NewVenueRepository()
-	for _, v := range venues {
-		err := vr.Add(v)
-		require.NoError(t, err)
-	}
-
-	ar := artistMemory.NewArtistRepository()
 	artist, err := aggregate.NewArtist("Les Claypool", 50)
-	err = ar.Create(artist)
 	require.NoError(t, err)
 
-	gs, err := NewGigService(WithVenueRepository(vr), WithArtistRepository(ar))
+	gs, err := NewGigService(WithInMemoryVenueRepository(venues), WithInMemoryArtistRepository())
+	err = gs.artistRepository.Create(artist)
+	require.NoError(t, err)
 	sut, err := NewRecordLabel(WithGigService(*gs))
 	require.NoError(t, err)
 
