@@ -8,7 +8,7 @@ import (
 	"testing"
 )
 
-func init_venues(t *testing.T) []aggregate.Venue {
+func initVenues(t *testing.T) []aggregate.Venue {
 	v1, err := aggregate.NewVenue("El Ventorrillo del Cura", "Rincon de la Victoria", 1.1)
 	require.NoError(t, err)
 	v2, err := aggregate.NewVenue("Sala Velvet", "Málaga", 2.2)
@@ -20,7 +20,7 @@ func init_venues(t *testing.T) []aggregate.Venue {
 }
 
 func Test_NewGigs(t *testing.T) {
-	venues := init_venues(t)
+	venues := initVenues(t)
 	sut, err := NewGigService(WithInMemoryArtistRepository(), WithInMemoryVenueRepository(venues))
 	require.NoError(t, err)
 
@@ -28,8 +28,8 @@ func Test_NewGigs(t *testing.T) {
 	err = sut.artistRepository.Create(artist)
 	require.NoError(t, err)
 
-	productIds := []uuid.UUID{venues[0].ID(), venues[1].ID()}
-	total, err := sut.BookGigs(artist.ID(), productIds)
+	venueIds := []uuid.UUID{venues[0].ID(), venues[1].ID()}
+	total, err := sut.BookGigs(artist.ID(), venueIds)
 	require.NoError(t, err)
 	assert.Equal(t, 3.3000000000000003, total)
 }
