@@ -5,20 +5,21 @@ import (
 	"github.com/Marcohb99/go-ddd-sample/src/domain/artist"
 	"github.com/Marcohb99/go-ddd-sample/src/domain/artist/inmemory"
 	"github.com/Marcohb99/go-ddd-sample/src/domain/venue"
+	inmemory2 "github.com/Marcohb99/go-ddd-sample/src/domain/venue/inmemory"
 	"github.com/google/uuid"
 	"log"
 )
 
 type GigConfiguration func(as *GigService) error
 
-// GigService represents the artist service
+// GigService represents the gig service
 type GigService struct {
 	artistRepository artist.ArtistRepository
 	venueRepository  venue.VenueRepository
 }
 
-// NewArtistService creates a new artist service
-func NewArtistService(configurations ...GigConfiguration) (*GigService, error) {
+// NewGigService creates a new artist service
+func NewGigService(configurations ...GigConfiguration) (*GigService, error) {
 	as := &GigService{}
 
 	// loop through the configurations and apply them
@@ -42,6 +43,25 @@ func WithInMemoryArtistRepository() GigConfiguration {
 	return func(as *GigService) error {
 		repo := inmemory.NewArtistRepository()
 		return WithArtistRepository(repo)(as)
+	}
+}
+
+func WithVenueRepository(repository venue.VenueRepository) GigConfiguration {
+	return func(gigService *GigService) error {
+		gigService.venueRepository = repository
+		return nil
+	}
+}
+
+func WithInMemoryVenueRepository(venues []aggregate.Venue) GigConfiguration {
+	return func(gigService *GigService) error {
+		repo := inmemory2.NewVenueRepository()
+		for _, v := range venues {
+			if err := repo.Add(v); err != nil {
+				return err
+			}
+		}
+		return WithVenueRepository(repo)(gigService)
 	}
 }
 

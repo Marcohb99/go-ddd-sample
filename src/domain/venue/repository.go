@@ -8,8 +8,10 @@ import (
 
 var (
 	ErrVenueNotFound = errors.New("venue not found")
+	ErrVenueExists   = errors.New("venue already exists")
 )
 
 type VenueRepository interface {
 	Get(uuid.UUID) (aggregate.Venue, error)
+	Add(aggregate.Venue) error
 }
